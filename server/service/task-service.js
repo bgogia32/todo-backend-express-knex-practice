@@ -1,5 +1,6 @@
 const taskRepo = require('../database/task-queries.js');
 const cacheClient = require('../redis.js');
+const ws = require('../websocket.js');
 const cache = cacheClient.cache;
 
 const keyAllTasks = 'allTaskKey';
@@ -41,6 +42,7 @@ async function CreateTask(taskDetails) {
     }
     const result = await taskRepo.createTask(taskDetails.name, taskDetails.description, taskDetails.duedate, taskDetails.status_id, taskDetails.project_id, assignedUsers);
     DeleteCache(taskDetails.project_id);
+    ws.BroadcastUpdate('TASK CREATED', result);
     return result;
 }
 
@@ -51,12 +53,14 @@ async function UpdateTask(task_id, taskDetails) {
     }
     const result =  await taskRepo.updateTask(task_id, taskDetails.name, taskDetails.description, taskDetails.duedate, taskDetails.status_id, taskDetails.project_id, taskDetails.iscompleted, assignedUsers);
     DeleteCache(taskDetails.project_id);
+    ws.BroadcastUpdate('TASK UPDATED', result);
     return result;
 }
 
 async function DeleteTask(task_id) {
     const result =  await taskRepo.deleteTask(task_id);
     DeleteCache(result.taskDetails.project_id);
+    ws.BroadcastUpdate('TASK DELETED', result);
     return result;
 }
 

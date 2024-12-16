@@ -1,5 +1,7 @@
 const app = require('./server-config.js');
 const routes = require('./server-routes.js');
+const http = require('http');
+const ws = require('./websocket.js');
 
 const port = process.env.PORT || 5000;
 
@@ -21,8 +23,11 @@ app.patch('/task/:id', routes.patchTask);
 
 app.delete('/task/:id', routes.deleteTask);
 
+const server = http.createServer(app);
+ws.SetUpWebSocket(server);
+
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => console.log(`Listening on port ${port}`));
+  server.listen(port, () => console.log(`Listening on port ${port}`));
 }
 
 module.exports = app;
