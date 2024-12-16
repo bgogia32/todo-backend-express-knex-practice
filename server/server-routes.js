@@ -66,7 +66,7 @@ async function postTask(req, res) {
 }
 
 async function patchTask(req, res) {
-  const updated = await taskService.UpdateTask(req.body);
+  const updated = await taskService.UpdateTask(req.params.id, req.body);
   return res.send(updated);
 }
 

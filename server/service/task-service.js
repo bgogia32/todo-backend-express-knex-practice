@@ -14,19 +14,19 @@ async function GetTasksById(task_id) {
 
 async function CreateTask(taskDetails) {
     
-    const assignedUsers = taskRepo.ValidateProjectUsers(taskDetails.user_ids, taskDetails.project_id);
+    const assignedUsers = await taskRepo.ValidateProjectUsers(taskDetails.user_ids, taskDetails.project_id);
     if(assignedUsers.error) {
         return assignedUsers.error;
     }
     return await taskRepo.createTask(taskDetails.name, taskDetails.description, taskDetails.duedate, taskDetails.status_id, taskDetails.project_id, assignedUsers);
 }
 
-async function UpdateTask(taskDetails) {
-    const assignedUsers = taskRepo.ValidateProjectUsers(taskDetails.user_ids, taskDetails.project_id);
+async function UpdateTask(task_id, taskDetails) {
+    const assignedUsers = await taskRepo.ValidateProjectUsers(taskDetails.user_ids, taskDetails.project_id);
     if(assignedUsers.error) {
         return assignedUsers.error;
     }
-    return await taskRepo.updateTask(taskDetails.task_id, taskDetails.name, taskDetails.description, taskDetails.duedate, taskDetails.status_id, taskDetails.project_id, assignedUsers);
+    return await taskRepo.updateTask(task_id, taskDetails.name, taskDetails.description, taskDetails.duedate, taskDetails.status_id, taskDetails.project_id, taskDetails.iscompleted, assignedUsers);
 }
 
 async function DeleteTask(task_id) {
