@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const todos = require('./database/todo-queries.js');
+const taskService = require('./service/task-service.js');
 
 function createToDo(req, data) {
   const protocol = req.protocol, 
@@ -44,6 +45,36 @@ async function deleteTodo(req, res) {
   return res.send(createToDo(req, deleted));
 }
 
+async function getAllTasks(req, res) {
+  const allTasks = await taskService.GetAllTasks()
+  return res.send(allTasks);
+}
+
+async function getTasksByProjectId(req, res) {
+  const tasks = await taskService.GetTasksByProjectId(req.params.id);
+  return res.send(tasks);
+}
+
+async function getTaskById(req, res) {
+  const task = await taskService.GetTasksById(req.params.id);
+  return res.send(task);
+}
+
+async function postTask(req, res) {
+  const created = await taskService.CreateTask(req.body);
+  return res.send(created);
+}
+
+async function patchTask(req, res) {
+  const updated = await taskService.UpdateTask(req.body);
+  return res.send(updated);
+}
+
+async function deleteTask(req, res) {
+  const deleted = await taskService.DeleteTask(req.params.id);
+  return res.send(deleted);
+}
+
 function addErrorReporting(func, message) {
     return async function(req, res) {
         try {
@@ -63,7 +94,13 @@ const toExport = {
     postTodo: { method: postTodo, errorMessage: "Could not post todo" },
     patchTodo: { method: patchTodo, errorMessage: "Could not patch todo" },
     deleteAllTodos: { method: deleteAllTodos, errorMessage: "Could not delete all todos" },
-    deleteTodo: { method: deleteTodo, errorMessage: "Could not delete todo" }
+    deleteTodo: { method: deleteTodo, errorMessage: "Could not delete todo" },
+    getAllTasks: { method: getAllTasks, errorMessage: "Could not fetch all tasks" },
+    getTasksByProjectId: { method: getTasksByProjectId, errorMessage: "Could not fetch tasks by project" },
+    getTaskById: { method: getTaskById, errorMessage: "Could not get task by id" },
+    postTask: { method: postTask, errorMessage: "Could not post task" },
+    patchTask: { method: patchTask, errorMessage: "Could not patch task" },
+    deleteTask: { method: deleteTask, errorMessage: "Could not delete task" }
 }
 
 for (let route in toExport) {

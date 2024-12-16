@@ -3,14 +3,23 @@ const routes = require('./server-routes.js');
 
 const port = process.env.PORT || 5000;
 
-app.get('/', routes.getAllTodos);
-app.get('/:id', routes.getTodo);
+app.get('/todo', routes.getAllTodos);
+app.get('/todo/:id', routes.getTodo);
 
-app.post('/', routes.postTodo);
-app.patch('/:id', routes.patchTodo);
+app.post('/todo', routes.postTodo);
+app.patch('/todo/:id', routes.patchTodo);
 
-app.delete('/', routes.deleteAllTodos);
-app.delete('/:id', routes.deleteTodo);
+app.delete('/todo', routes.deleteAllTodos);
+app.delete('/todo/:id', routes.deleteTodo);
+
+app.get('/task', routes.getAllTasks);
+app.get('/task/project/:id', routes.getTasksByProjectId);
+app.get('/task/:id', routes.getTaskById);
+
+app.post('/task', routes.postTask);
+app.patch('/task/:id', routes.patchTask);
+
+app.delete('/task/:id', routes.deleteTask);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => console.log(`Listening on port ${port}`));
