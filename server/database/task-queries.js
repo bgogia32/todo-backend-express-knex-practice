@@ -26,7 +26,7 @@ async function createTask(name, description, duedate, status_id, project_id, ass
                 const insertedUsers = await AssignUsersToTask(trx, assignedUsers, insertedTask.id);
 
           //Function to Create Log
-                await LogActivityInDB(trx, 'TASK CREATED', JSON.stringify(insertedTask, insertedUsers));
+                await LogActivityInDB(trx, 'TASK CREATED', JSON.stringify({insertedTask, insertedUsers}));
 
                 return {insertedTask, insertedUsers};
 
@@ -50,7 +50,7 @@ async function updateTask(task_id, name, description, duedate, status_id, projec
 
             const updatedTask = updatedTasks[0];
 
-            await LogActivityInDB(trx, 'TASK UPDATED', JSON.stringify(updatedTask, updatedUsers));
+            await LogActivityInDB(trx, 'TASK UPDATED', JSON.stringify({updatedTask, updatedUsers}));
 
             return {taskDetails: updatedTask, assignedUsers: updatedUsers};
         }
@@ -72,7 +72,7 @@ async function deleteTask(task_id) {
 
             const deletedTask = deletedTasks[0];
 
-           await LogActivityInDB(trx, 'TASK DELETED', JSON.stringify(deletedTask, deletedUsers));
+           await LogActivityInDB(trx, 'TASK DELETED', JSON.stringify({deletedTask, deletedUsers}));
 
             return {taskDetails: deletedTask, assignedUsers: deletedUsers};
         }
